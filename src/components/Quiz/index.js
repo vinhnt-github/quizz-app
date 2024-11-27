@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import {
   Container,
   Segment,
@@ -11,11 +11,11 @@ import {
   Menu,
   Header,
   Image,
-} from 'semantic-ui-react';
-import he from 'he';
+} from "semantic-ui-react";
+import he from "he";
 
-import Countdown from '../Countdown';
-import { getLetter } from '../../utils';
+import Countdown from "../Countdown";
+import { getLetter } from "../../utils";
 
 const Quiz = ({ data, countdownTime, endQuiz }) => {
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -25,7 +25,7 @@ const Quiz = ({ data, countdownTime, endQuiz }) => {
   const [timeTaken, setTimeTaken] = useState(null);
 
   useEffect(() => {
-    if (questionIndex > 0) window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (questionIndex > 0) window.scrollTo({ top: 0, behavior: "smooth" });
   }, [questionIndex]);
 
   const handleItemClick = (e, { name }) => {
@@ -61,7 +61,7 @@ const Quiz = ({ data, countdownTime, endQuiz }) => {
     setQuestionsAndAnswers(qna);
   };
 
-  const timeOver = timeTaken => {
+  const timeOver = (timeTaken) => {
     return endQuiz({
       totalQuestions: data.length,
       correctAnswers,
@@ -95,12 +95,13 @@ const Quiz = ({ data, countdownTime, endQuiz }) => {
                   <Message size="huge" floating>
                     <b>{`Q. ${he.decode(data[questionIndex].question)}`}</b>
                   </Message>
-                  <div style={{
-                    display: "flex",
-                    justifyContent: "center"
-                  }}>
-
-                    <Image src="/traffilight.jpg" />
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Image size="huge" src="/traffilight.jpg" />
                   </div>
                   <br />
                   <Item.Description>
@@ -119,7 +120,7 @@ const Quiz = ({ data, countdownTime, endQuiz }) => {
                           active={userSlectedAns === decodedOption}
                           onClick={handleItemClick}
                         >
-                          <b style={{ marginRight: '8px' }}>{letter}</b>
+                          <b style={{ marginRight: "8px" }}>{letter}</b>
                           {decodedOption}
                         </Menu.Item>
                       );

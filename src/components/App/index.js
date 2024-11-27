@@ -1,19 +1,67 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-import Layout from '../Layout';
-import Loader from '../Loader';
-import Main from '../Main';
-import Quiz from '../Quiz';
-import Result from '../Result';
+import Layout from "../Layout";
+import Loader from "../Loader";
+import Main from "../Main";
+import Quiz from "../Quiz";
+import Result from "../Result";
 
-import { shuffle } from '../../utils';
-import { toBeRequired } from '@testing-library/jest-dom/dist/matchers';
+import { shuffle } from "../../utils";
+import { toBeRequired } from "@testing-library/jest-dom/dist/matchers";
+
+const initData = [
+  {
+    type: "multiple",
+    difficulty: "easy",
+    category: "Entertainment: Video Games",
+    question:
+      "What is the protagonist&#039;s title given by the demons in DOOM (2016)?",
+    correct_answer: "Doom Slayer",
+    incorrect_answers: ["Doom Guy", "Doom Marine", "Doom Reaper"],
+  },
+  {
+    type: "multiple",
+    difficulty: "easy",
+    category: "Entertainment: Film",
+    question: "What was the first monster to appear alongside Godzilla?",
+    correct_answer: "Anguirus",
+    incorrect_answers: ["King Kong", "Mothra", "King Ghidora"],
+  },
+  {
+    type: "multiple",
+    difficulty: "easy",
+    category: "Sports",
+    question: "How many points did LeBron James score in his first NBA game?",
+    correct_answer: "25",
+    incorrect_answers: ["19", "69", "41"],
+  },
+  {
+    type: "multiple",
+    difficulty: "easy",
+    category: "Geography",
+    question: "What is the official language of Costa Rica?",
+    correct_answer: "Spanish",
+    incorrect_answers: ["English", "Portuguese", "Creole"],
+  },
+  {
+    type: "multiple",
+    difficulty: "easy",
+    category: "Geography",
+    question: "What is the capital of Denmark?",
+    correct_answer: "Copenhagen",
+    incorrect_answers: ["Aarhus", "Odense", "Aalborg"],
+  },
+];
 
 const App = () => {
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState(null);
   const [data, setData] = useState(null);
-  const [countdownTime, setCountdownTime] = useState(null);
+  const [countdownTime, setCountdownTime] = useState({
+    hours: 0,
+    minutes: 120,
+    seconds: 0,
+  });
   const [isQuizStarted, setIsQuizStarted] = useState(true);
   const [isQuizCompleted, setIsQuizCompleted] = useState(false);
   const [resultData, setResultData] = useState(null);
@@ -22,10 +70,10 @@ const App = () => {
   const startQuiz = (data, countdownTime) => {
     setLoading(true);
     setLoadingMessage({
-      title: 'Loading your quiz...',
+      title: "Loading your quiz...",
       message: "It won't be long!",
     });
-    // setCountdownTime(countdownTime);
+    setCountdownTime(countdownTime);
 
     setTimeout(() => {
       setData(data);
@@ -34,11 +82,11 @@ const App = () => {
     }, 1000);
   };
 
-  const endQuiz = resultData => {
+  const endQuiz = (resultData) => {
     setLoading(true);
     setLoadingMessage({
-      title: 'Fetching your results...',
-      message: 'Just a moment!',
+      title: "Fetching your results...",
+      message: "Just a moment!",
     });
 
     setTimeout(() => {
@@ -52,12 +100,12 @@ const App = () => {
   const replayQuiz = () => {
     setLoading(true);
     setLoadingMessage({
-      title: 'Getting ready for round two.',
+      title: "Getting ready for round two.",
       message: "It won't take long!",
     });
 
     const shuffledData = shuffle(data);
-    shuffledData.forEach(element => {
+    shuffledData.forEach((element) => {
       element.options = shuffle(element.options);
     });
 
@@ -74,13 +122,13 @@ const App = () => {
   const resetQuiz = () => {
     setLoading(true);
     setLoadingMessage({
-      title: 'Loading the home screen.',
-      message: 'Thank you for playing!',
+      title: "Loading the home screen.",
+      message: "Thank you for playing!",
     });
 
     setTimeout(() => {
-      setData(null);
-      // setCountdownTime(null);
+      // setData(null);
+      setCountdownTime(null);
       setIsQuizStarted(false);
       setIsQuizCompleted(false);
       setResultData(null);
@@ -89,58 +137,20 @@ const App = () => {
   };
 
   useEffect(() => {
-    const fetchData = () => {
-      setLoading(true);
+    const results = [...initData];
+    initData.forEach((element) => {
+      element.options = shuffle([
+        element.correct_answer,
+        ...element.incorrect_answers,
+      ]);
+    });
 
-      if (error) setError(null);
-
-      const API = `https://opentdb.com/api.php?amount=5&category=0&difficulty=easy&type=0`
-
-      fetch(API)
-        .then(respone => respone.json())
-        .then(data => {
-          const { response_code, results } = data;
-
-          if (response_code === 1) {
-            const message = (
-              <p>
-                The API doesn't have enough questions for your query. (Ex.
-                Asking for 50 Questions in a Category that only has 20.)
-                <br />
-                <br />
-                Please change the <strong>No. of Questions</strong>,{' '}
-                <strong>Difficulty Level</strong>, or{' '}
-                <strong>Type of Questions</strong>.
-              </p>
-            );
-
-            setLoading(false);
-            setError({ message });
-
-            return;
-          }
-
-          results.forEach(element => {
-            element.options = shuffle([
-              element.correct_answer,
-              ...element.incorrect_answers,
-            ]);
-          });
-
-          setLoading(false);
-          startQuiz(
-            results,
-            // countdownTime.hours + countdownTime.minutes + countdownTime.seconds
-          )
-        }
-        )
-        .catch(error => {
-          console.error(error)
-        }
-        );
-    };
-    fetchData()
-  }, [])
+    setLoading(false);
+    startQuiz(
+      results,
+      countdownTime.hours + countdownTime.minutes + countdownTime.seconds
+    );
+  }, []);
 
   return (
     <Layout>
@@ -148,7 +158,7 @@ const App = () => {
       {/* {!loading && !isQuizStarted && !isQuizCompleted && (
         <Main startQuiz={startQuiz} />
       )} */}
-      {data && (
+      {data && !isQuizCompleted && (
         <Quiz data={data} countdownTime={countdownTime} endQuiz={endQuiz} />
       )}
       {!loading && isQuizCompleted && (
