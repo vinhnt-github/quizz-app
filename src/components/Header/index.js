@@ -33,7 +33,7 @@ const Header = () => {
       <Menu.Item header>
         <h1>QuizApp</h1>
       </Menu.Item>
-      {promptEvent && !isAppInstalled && (
+      {/* {promptEvent && !isAppInstalled && (
         <Menu.Item position="right">
           <Button
             color="teal"
@@ -43,7 +43,7 @@ const Header = () => {
             onClick={installApp}
           />
         </Menu.Item>
-      )}
+      )} */}
     </Menu>
   );
 };

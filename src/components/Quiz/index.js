@@ -10,6 +10,7 @@ import {
   Message,
   Menu,
   Header,
+  Image,
 } from 'semantic-ui-react';
 import he from 'he';
 
@@ -83,17 +84,24 @@ const Quiz = ({ data, countdownTime, endQuiz }) => {
                       {`Question No.${questionIndex + 1} of ${data.length}`}
                     </Header.Content>
                   </Header>
-                  <Countdown
+                  {/* <Countdown
                     countdownTime={countdownTime}
                     timeOver={timeOver}
                     setTimeTaken={setTimeTaken}
-                  />
+                  /> */}
                 </Item.Extra>
                 <br />
                 <Item.Meta>
                   <Message size="huge" floating>
                     <b>{`Q. ${he.decode(data[questionIndex].question)}`}</b>
                   </Message>
+                  <div style={{
+                    display: "flex",
+                    justifyContent: "center"
+                  }}>
+
+                    <Image src="/traffilight.jpg" />
+                  </div>
                   <br />
                   <Item.Description>
                     <h3>Please choose one of the following answers:</h3>
